@@ -60,7 +60,7 @@ The Angular front end sits in a separate ClientApp project folder and is built s
 Making changes to the Angular application requires transpiling of the typescript source files. In order to make changes to the Angular 10 client sample run the following from a command window:
 
 ```ps
-cd <installFolder>\src\WebUI/ClientApp
+cd <Base Solution Folder>\src\WebUI\ClientApp
 npm install
 ng serve
 ```
