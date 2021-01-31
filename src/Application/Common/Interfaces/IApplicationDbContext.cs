@@ -11,6 +11,10 @@ namespace jCoreDemoApp.Application.Common.Interfaces
 
         DbSet<TodoItem> TodoItems { get; set; }
 
+        DbSet<ContactList> ContactLists { get; set; }
+
+        DbSet<ContactItem> ContactItems { get; set; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

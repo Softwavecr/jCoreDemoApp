@@ -237,6 +237,39 @@ namespace jCoreDemoApp.Infrastructure.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+
+            migrationBuilder.CreateTable(
+                name: "ContactItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ListId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Company = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ProfileImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PhoneNumberWork = table.Column<string>(type: "datetime2", nullable: true),
+                    PhoneNumberPersonal = table.Column<string>(type: "datetime2", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContactItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ContactItems_ContactsLists_ListId",
+                        column: x => x.ListId,
+                        principalTable: "ContactLists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -306,6 +339,11 @@ namespace jCoreDemoApp.Infrastructure.Persistence.Migrations
                 name: "IX_TodoItems_ListId",
                 table: "TodoItems",
                 column: "ListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContactItems_ListId",
+                table: "ContactItems",
+                column: "ListId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -342,6 +380,12 @@ namespace jCoreDemoApp.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "TodoLists");
+
+            migrationBuilder.DropTable(
+                name: "ContactItems");
+
+            migrationBuilder.DropTable(
+                name: "ContactLists");                
         }
     }
 }

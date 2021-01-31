@@ -31,6 +31,8 @@ namespace jCoreDemoApp.Infrastructure.Persistence
             _dateTime = dateTime;
         }
 
+        public DbSet<ContactItem> ContactItems { get; set; } 
+        public DbSet<ContactList> ContactLists { get; set; }
         public DbSet<TodoItem> TodoItems { get; set; }
 
         public DbSet<TodoList> TodoLists { get; set; }
@@ -62,9 +64,12 @@ namespace jCoreDemoApp.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(builder);
+
+            //[NotMapped]
         }
 
         private async Task DispatchEvents()
