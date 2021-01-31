@@ -13,7 +13,7 @@ namespace jCoreDemoApp.Domain.Entities
         public int ListId { get; set; }
         public string Name { get; set; }
         public string Company { get; set; }
-        object ProfileImage { get; set; }
+        public byte[] ProfileImage { get; set; }
         public string Email { get; set; }
         public string BirthDate { get; set; }
         public string PhoneNumberWork { get; set; }
