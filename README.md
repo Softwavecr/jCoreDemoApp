@@ -43,7 +43,8 @@ You should just be able to clone this repo as is on either Windows or Mac (and p
 ```
 cd <Base Solution Folder>\src\WebUI
 dotnet build
-cd ClientApp
+dotnet run
+cd <Base Solution Folder>\src\WebUI\ClientApp
 npm start
 ```
 
@@ -52,20 +53,6 @@ Then navigate to [http://localhost:5000](http://localhost:5000) to start the app
 If you're running the application locally through IIS or Kestrel, the application should just work as is. By default it uses a SqLite data base that is created in the Web app's content (not Web) root. 
 
 The sample also works with SQL Server but you have to create the database for that to work and set the connection string in `appsettings.json`. 
-
-
-To switch between SqLite and Sql Server use the `useSqlLite` configuration settings:
-
-```json
-  "Data": {
-    "AlbumViewer": {
-      "useSqLite": "true",
-      "SqlServerConnectionString": "server=.;database=AlbumViewer;integrated security=true;",
-    } 
-  },
-  //... other settings omitted
-}
-```  
 
 #### To develop the ClientApp Angular example
 The Angular front end sits in a separate ClientApp project folder and is built separately from the ASP.NET Core application.
