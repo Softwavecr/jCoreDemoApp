@@ -17,6 +17,7 @@ import { AuthorizeInterceptor } from 'src/api-authorization/authorize.intercepto
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ContactComponent } from './contact/contact.component';
+import { OrganizationsummaryComponent } from './organizationsummary/organizationsummary.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { ContactComponent } from './contact/contact.component';
     CounterComponent,
     FetchDataComponent,
     TodoComponent,
-    ContactComponent
+    ContactComponent,
+    OrganizationsummaryComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -37,6 +39,7 @@ import { ContactComponent } from './contact/contact.component';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'contact', component: ContactComponent },
+      { path: 'OrganizationSummary', component: OrganizationsummaryComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'todo', component: TodoComponent, canActivate: [AuthorizeGuard] },
