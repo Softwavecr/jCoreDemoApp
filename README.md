@@ -67,7 +67,7 @@ Making changes to the Angular application requires transpiling of the typescript
 ```
 cd <Base Solution Folder>\src\WebUI\ClientApp
 npm install
-ng serve
+npm start
 ```
 
 then navigate to http://localhost:4200 to run the application. Note this uses the WebPack development server rather than running through IIS Express or Kestrel for the front end assets - `index.html`, all css, images etc. are served from the development server and only API requests go through Kestrel/IIS.
