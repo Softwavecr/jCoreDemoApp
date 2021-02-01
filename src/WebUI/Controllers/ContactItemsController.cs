@@ -1,52 +1,31 @@
 ﻿using jCoreDemoApp.Application.Common.Models;
-using jCoreDemoApp.Application.ContactItems.Commands.CreateContactItem;
-using jCoreDemoApp.Application.ContactItems.Commands.DeleteContactItem;
-using jCoreDemoApp.Application.ContactItems.Commands.UpdateContactItem;
-using jCoreDemoApp.Application.ContactItems.Commands.UpdateContactItemDetail;
-using jCoreDemoApp.Application.ContactItems.Queries.GetContactItemsWithPagination;
-using jCoreDemoApp.Application.ContactItems.Queries.GetContactItems;
-//using jCoreDemoApp.Application.ContactLists.Queries.GetContacts;
-using Microsoft.AspNetCore.Authorization;
+using jCoreDemoApp.Application.Contacts.Commands.CreateContact;
+using jCoreDemoApp.Application.Contacts.Commands.DeleteContact;
+using jCoreDemoApp.Application.Contacts.Commands.UpdateContact;
+using jCoreDemoApp.Application.Contacts.Commands.UpdateContactDetail;
+using jCoreDemoApp.Application.Contacts.Queries.GetContactsWithPagination;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-
+//using Microsoft.AspNetCore.Authorization;
 namespace jCoreDemoApp.WebUI.Controllers
 {
-    [Authorize]
-    public class ContactItemsController : ApiControllerBase
+    //[Authorize]
+    public class ContactsController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<ContactItemDto>>> GetContactItemsWithPagination([FromQuery] GetContactItemsWithPaginationQuery query)
+        public async Task<ActionResult<PaginatedList<ContactPaginatedDto>>> GetContactsWithPagination([FromQuery] GetContactsWithPaginationQuery query)
         {
             return await Mediator.Send(query);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<ContactItemDto>> GetContactItems()
-        {
-            return await Mediator.Send(new GetContactItemsQuery());
-        }
-
-    //     public async Task<IEnumerable<WeatherForecast>> Get()
-    //     {
-    //         return await Mediator.Send(new GetWeatherForecastsQuery());
-    //     }
-    // }
-
-        // [HttpGet]
-        // public async Task<ActionResult<ContactsVm>> Get()
-        // {
-        //     return await Mediator.Send(new GetContactsQuery());
-        // }
-
         [HttpPost]
-        public async Task<ActionResult<int>> Create(CreateContactItemCommand command)
+        public async Task<ActionResult<int>> Create(CreateContactCommand command)
         {
             return await Mediator.Send(command);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, UpdateContactItemCommand command)
+        public async Task<ActionResult> Update(int id, UpdateContactCommand command)
         {
             if (id != command.Id)
             {
@@ -59,7 +38,7 @@ namespace jCoreDemoApp.WebUI.Controllers
         }
 
         [HttpPut("[action]")]
-        public async Task<ActionResult> UpdateItemDetails(int id, UpdateContactItemDetailCommand command)
+        public async Task<ActionResult> UpdateItemDetails(int id, UpdateContactDetailCommand command)
         {
             if (id != command.Id)
             {
@@ -74,7 +53,7 @@ namespace jCoreDemoApp.WebUI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await Mediator.Send(new DeleteContactItemCommand { Id = id });
+            await Mediator.Send(new DeleteContactCommand { Id = id });
 
             return NoContent();
         }

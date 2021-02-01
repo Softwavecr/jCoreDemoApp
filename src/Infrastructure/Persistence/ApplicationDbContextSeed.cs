@@ -51,9 +51,9 @@ namespace jCoreDemoApp.Infrastructure.Persistence
 
                 await context.SaveChangesAsync();
             }
-            if (!context.ContactItems.Any())
+            if (!context.Contacts.Any())
             {
-                context.ContactItems.Add(new ContactItem
+                context.Contacts.Add(new Contact
                 {
                     Id = 1,
                     Name = "Maria Anders",
@@ -66,7 +66,7 @@ namespace jCoreDemoApp.Infrastructure.Persistence
                     Deleted= false,
                 });
 
-                context.ContactItems.Add(new ContactItem
+                context.Contacts.Add(new Contact
                 {
                     Id = 2,
                     Name = "Ana Trujillo",
@@ -79,7 +79,7 @@ namespace jCoreDemoApp.Infrastructure.Persistence
                     Deleted= false,
                 });
 
-                context.ContactItems.Add(new ContactItem
+                context.Contacts.Add(new Contact
                 {
                     Id = 3,
                     Name = "Antonio Moreno",
@@ -93,7 +93,7 @@ namespace jCoreDemoApp.Infrastructure.Persistence
                 });
 
 
-                context.ContactItems.Add(new ContactItem
+                context.Contacts.Add(new Contact
                 {
                     Id = 4,
                     Name = "Thomas Hardy",
@@ -106,7 +106,7 @@ namespace jCoreDemoApp.Infrastructure.Persistence
                     Deleted= false,
                 });
 
-                context.ContactItems.Add(new ContactItem
+                context.Contacts.Add(new Contact
                 {
                     Id = 5,
                     Name = "Christina Berglund",
@@ -119,7 +119,7 @@ namespace jCoreDemoApp.Infrastructure.Persistence
                     Deleted= false,
                 });
 
-                context.ContactItems.Add(new ContactItem
+                context.Contacts.Add(new Contact
                 {
                     Id = 6,
                     Name = "Hanna Moss",

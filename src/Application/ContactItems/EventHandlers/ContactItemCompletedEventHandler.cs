@@ -5,18 +5,18 @@ using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace jCoreDemoApp.Application.ContactItems.EventHandlers
+namespace jCoreDemoApp.Application.Contacts.EventHandlers
 {
-    public class ContactItemCompletedEventHandler : INotificationHandler<DomainEventNotification<ContactItemDeletedEvent>>
+    public class ContactCompletedEventHandler : INotificationHandler<DomainEventNotification<ContactDeletedEvent>>
     {
-        private readonly ILogger<ContactItemCompletedEventHandler> _logger;
+        private readonly ILogger<ContactCompletedEventHandler> _logger;
 
-        public ContactItemCompletedEventHandler(ILogger<ContactItemCompletedEventHandler> logger)
+        public ContactCompletedEventHandler(ILogger<ContactCompletedEventHandler> logger)
         {
             _logger = logger;
         }
 
-        public Task Handle(DomainEventNotification<ContactItemDeletedEvent> notification, CancellationToken cancellationToken)
+        public Task Handle(DomainEventNotification<ContactDeletedEvent> notification, CancellationToken cancellationToken)
         {
             var domainEvent = notification.DomainEvent;
 

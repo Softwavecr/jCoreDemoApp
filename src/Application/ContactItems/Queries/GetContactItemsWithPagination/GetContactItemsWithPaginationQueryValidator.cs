@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace jCoreDemoApp.Application.ContactItems.Queries.GetContactItemsWithPagination
+namespace jCoreDemoApp.Application.Contacts.Queries.GetContactsWithPagination
 {
-    public class GetContactItemsWithPaginationQueryValidator : AbstractValidator<GetContactItemsWithPaginationQuery>
+    public class GetContactsWithPaginationQueryValidator : AbstractValidator<GetContactsWithPaginationQuery>
     {
-        public GetContactItemsWithPaginationQueryValidator()
+        public GetContactsWithPaginationQueryValidator()
         {
             // RuleFor(x => x.Id)
             //     .NotNull()

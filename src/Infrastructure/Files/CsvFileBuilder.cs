@@ -1,6 +1,5 @@
 ﻿using jCoreDemoApp.Application.Common.Interfaces;
 using jCoreDemoApp.Application.TodoLists.Queries.ExportTodos;
-using jCoreDemoApp.Application.ContactLists.Queries.ExportContacts;
 using jCoreDemoApp.Infrastructure.Files.Maps;
 using CsvHelper;
 using System.Collections.Generic;
@@ -23,20 +22,6 @@ namespace jCoreDemoApp.Infrastructure.Files
             }
 
             return memoryStream.ToArray();
-        }
-
-        public byte[] BuildContactItemsFile(IEnumerable<ContactItemRecord> records)
-        {
-            using var memoryStream = new MemoryStream();
-            using (var streamWriter = new StreamWriter(memoryStream))
-            {
-                using var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture);
-
-                csvWriter.Configuration.RegisterClassMap<ContactItemRecordMap>();
-                csvWriter.WriteRecords(records);
-            }
-
-            return memoryStream.ToArray();
-        }        
+        }       
     }
 }

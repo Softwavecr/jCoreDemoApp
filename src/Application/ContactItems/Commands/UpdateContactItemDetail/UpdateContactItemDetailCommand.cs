@@ -6,9 +6,9 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace jCoreDemoApp.Application.ContactItems.Commands.UpdateContactItemDetail
+namespace jCoreDemoApp.Application.Contacts.Commands.UpdateContactDetail
 {
-    public class UpdateContactItemDetailCommand : IRequest
+    public class UpdateContactDetailCommand : IRequest
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -23,22 +23,22 @@ namespace jCoreDemoApp.Application.ContactItems.Commands.UpdateContactItemDetail
         public int Priority { get; set; }        
     }
 
-    public class UpdateContactItemDetailCommandHandler : IRequestHandler<UpdateContactItemDetailCommand>
+    public class UpdateContactDetailCommandHandler : IRequestHandler<UpdateContactDetailCommand>
     {
         private readonly IApplicationDbContext _context;
 
-        public UpdateContactItemDetailCommandHandler(IApplicationDbContext context)
+        public UpdateContactDetailCommandHandler(IApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Unit> Handle(UpdateContactItemDetailCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateContactDetailCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.ContactItems.FindAsync(request.Id);
+            var entity = await _context.Contacts.FindAsync(request.Id);
 
             if (entity == null)
             { 
-                throw new NotFoundException(nameof(ContactItem), request.Id);
+                throw new NotFoundException(nameof(Contact), request.Id);
             }
 
             entity.Id = request.Id;

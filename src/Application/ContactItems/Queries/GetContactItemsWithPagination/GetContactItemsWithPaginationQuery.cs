@@ -8,39 +8,32 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace jCoreDemoApp.Application.ContactItems.Queries.GetContactItemsWithPagination
+namespace jCoreDemoApp.Application.Contacts.Queries.GetContactsWithPagination
 {
-    public class GetContactItemsWithPaginationQuery : IRequest<PaginatedList<ContactItemDto>>
+    public class GetContactsWithPaginationQuery : IRequest<PaginatedList<ContactPaginatedDto>>
     {
-        public int Id { get; set; }
         public int PageNumber { get; set; } = 1;
-        public int PageSize { get; set; } = 10;
+        public int PageSize { get; set; } = 20;
     }
 
-    public class GetContactItemsWithPaginationQueryHandler : IRequestHandler<GetContactItemsWithPaginationQuery, PaginatedList<ContactItemDto>>
+    public class GetContactsWithPaginationQueryHandler : IRequestHandler<GetContactsWithPaginationQuery, PaginatedList<ContactPaginatedDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public GetContactItemsWithPaginationQueryHandler(IApplicationDbContext context, IMapper mapper)
+        public GetContactsWithPaginationQueryHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        public async Task<PaginatedList<ContactItemDto>> Handle(GetContactItemsWithPaginationQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedList<ContactPaginatedDto>> Handle(GetContactsWithPaginationQuery request, CancellationToken cancellationToken)
         {
-            return await _context.ContactItems
-                .Where(x => x.Id > 0)
-                .OrderBy(x => x.Name)
-                .ProjectTo<ContactItemDto>(_mapper.ConfigurationProvider)
+            return await _context.Contacts
+                
+                .OrderBy(x => x.Id)
+                .ProjectTo<ContactPaginatedDto>(_mapper.ConfigurationProvider)
                 .PaginatedListAsync(request.PageNumber, request.PageSize);
-
-            // return await _context.ContactItems
-            //     .Where(x => x.Id == request.Id)
-            //     .OrderBy(x => x.Name)
-            //     .ProjectTo<ContactItemDto>(_mapper.ConfigurationProvider)
-            //     .PaginatedListAsync(request.PageNumber, request.PageSize);                
         }
     }
 }

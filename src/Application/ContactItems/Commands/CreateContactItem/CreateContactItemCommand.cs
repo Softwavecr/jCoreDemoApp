@@ -5,9 +5,9 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace jCoreDemoApp.Application.ContactItems.Commands.CreateContactItem
+namespace jCoreDemoApp.Application.Contacts.Commands.CreateContact
 {
-    public class CreateContactItemCommand : IRequest<int>
+    public class CreateContactCommand : IRequest<int>
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -22,18 +22,18 @@ namespace jCoreDemoApp.Application.ContactItems.Commands.CreateContactItem
         public int Priority { get; set; }
     }
 
-    public class CreateContactItemCommandHandler : IRequestHandler<CreateContactItemCommand, int>
+    public class CreateContactCommandHandler : IRequestHandler<CreateContactCommand, int>
     {
         private readonly IApplicationDbContext _context;
 
-        public CreateContactItemCommandHandler(IApplicationDbContext context)
+        public CreateContactCommandHandler(IApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<int> Handle(CreateContactItemCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateContactCommand request, CancellationToken cancellationToken)
         {
-            var entity = new ContactItem
+            var entity = new Contact
             {
                 Id = request.Id,                
                 Name = request.Name,
@@ -47,9 +47,9 @@ namespace jCoreDemoApp.Application.ContactItems.Commands.CreateContactItem
                 Deleted = false
             };
 
-            entity.DomainEvents.Add(new ContactItemCreatedEvent(entity));
+            entity.DomainEvents.Add(new ContactCreatedEvent(entity));
 
-            _context.ContactItems.Add(entity);
+            _context.Contacts.Add(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
 

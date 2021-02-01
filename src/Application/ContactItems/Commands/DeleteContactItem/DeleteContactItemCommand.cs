@@ -5,32 +5,32 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace jCoreDemoApp.Application.ContactItems.Commands.DeleteContactItem
+namespace jCoreDemoApp.Application.Contacts.Commands.DeleteContact
 {
-    public class DeleteContactItemCommand : IRequest
+    public class DeleteContactCommand : IRequest
     {
         public int Id { get; set; }
     }
 
-    public class DeleteContactItemCommandHandler : IRequestHandler<DeleteContactItemCommand>
+    public class DeleteContactCommandHandler : IRequestHandler<DeleteContactCommand>
     {
         private readonly IApplicationDbContext _context;
 
-        public DeleteContactItemCommandHandler(IApplicationDbContext context)
+        public DeleteContactCommandHandler(IApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Unit> Handle(DeleteContactItemCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteContactCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.ContactItems.FindAsync(request.Id);
+            var entity = await _context.Contacts.FindAsync(request.Id);
 
             if (entity == null)
             {
-                throw new NotFoundException(nameof(ContactItem), request.Id);
+                throw new NotFoundException(nameof(Contact), request.Id);
             }
 
-            _context.ContactItems.Remove(entity);
+            _context.Contacts.Remove(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
 

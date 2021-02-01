@@ -6,22 +6,13 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/ContactItems": {
+    "/api/Contacts": {
       "get": {
         "tags": [
-          "ContactItems"
+          "Contacts"
         ],
-        "operationId": "ContactItems_GetContactItemsWithPagination",
+        "operationId": "Contacts_GetContactsWithPagination",
         "parameters": [
-          {
-            "name": "Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          },
           {
             "name": "PageNumber",
             "in": "query",
@@ -29,7 +20,7 @@
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 2
+            "x-position": 1
           },
           {
             "name": "PageSize",
@@ -38,7 +29,7 @@
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 3
+            "x-position": 2
           }
         ],
         "responses": {
@@ -47,29 +38,24 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaginatedListOfContactItemDto"
+                  "$ref": "#/components/schemas/PaginatedListOfContactPaginatedDto"
                 }
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
-          "ContactItems"
+          "Contacts"
         ],
-        "operationId": "ContactItems_Create",
+        "operationId": "Contacts_Create",
         "requestBody": {
           "x-name": "command",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateContactItemCommand"
+                "$ref": "#/components/schemas/CreateContactCommand"
               }
             }
           },
@@ -88,20 +74,15 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
-    "/api/ContactItems/{id}": {
+    "/api/Contacts/{id}": {
       "put": {
         "tags": [
-          "ContactItems"
+          "Contacts"
         ],
-        "operationId": "ContactItems_Update",
+        "operationId": "Contacts_Update",
         "parameters": [
           {
             "name": "id",
@@ -119,7 +100,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateContactItemCommand"
+                "$ref": "#/components/schemas/UpdateContactCommand"
               }
             }
           },
@@ -138,18 +119,13 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
-          "ContactItems"
+          "Contacts"
         ],
-        "operationId": "ContactItems_Delete",
+        "operationId": "Contacts_Delete",
         "parameters": [
           {
             "name": "id",
@@ -174,20 +150,15 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
-    "/api/ContactItems/UpdateItemDetails": {
+    "/api/Contacts/UpdateItemDetails": {
       "put": {
         "tags": [
-          "ContactItems"
+          "Contacts"
         ],
-        "operationId": "ContactItems_UpdateItemDetails",
+        "operationId": "Contacts_UpdateItemDetails",
         "parameters": [
           {
             "name": "id",
@@ -204,7 +175,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateContactItemDetailCommand"
+                "$ref": "#/components/schemas/UpdateContactDetailCommand"
               }
             }
           },
@@ -223,195 +194,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/ContactLists": {
-      "get": {
-        "tags": [
-          "ContactLists"
-        ],
-        "operationId": "ContactLists_Get",
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ContactsVm"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "ContactLists"
-        ],
-        "operationId": "ContactLists_Create",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateContactListCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
-    "/api/ContactLists/{id}": {
-      "get": {
-        "tags": [
-          "ContactLists"
-        ],
-        "operationId": "ContactLists_Get2",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      },
-      "put": {
-        "tags": [
-          "ContactLists"
-        ],
-        "operationId": "ContactLists_Update",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          }
-        ],
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateContactListCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 2
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "ContactLists"
-        ],
-        "operationId": "ContactLists_Delete",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
     "/api/TodoItems": {
@@ -848,7 +631,7 @@
   },
   "components": {
     "schemas": {
-      "PaginatedListOfContactItemDto": {
+      "PaginatedListOfContactPaginatedDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -856,7 +639,7 @@
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/ContactItemDto"
+              "$ref": "#/components/schemas/ContactPaginatedDto"
             }
           },
           "pageIndex": {
@@ -879,7 +662,7 @@
           }
         }
       },
-      "ContactItemDto": {
+      "ContactPaginatedDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -929,7 +712,7 @@
           }
         }
       },
-      "CreateContactItemCommand": {
+      "CreateContactCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -979,7 +762,7 @@
           }
         }
       },
-      "UpdateContactItemCommand": {
+      "UpdateContactCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -1029,7 +812,7 @@
           }
         }
       },
-      "UpdateContactItemDetailCommand": {
+      "UpdateContactDetailCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -1077,89 +860,6 @@
           "priority": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      },
-      "ContactsVm": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "priorityLevels": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/PriorityLevelDto"
-            }
-          },
-          "lists": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/ContactListDto"
-            }
-          }
-        }
-      },
-      "PriorityLevelDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "value": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ContactListDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "colour": {
-            "type": "string",
-            "nullable": true
-          },
-          "items": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/ContactItemDto"
-            }
-          }
-        }
-      },
-      "CreateContactListCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "title": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "UpdateContactListCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
           }
         }
       },
@@ -1299,7 +999,7 @@
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/PriorityLevelDto2"
+              "$ref": "#/components/schemas/PriorityLevelDto"
             }
           },
           "lists": {
@@ -1311,7 +1011,7 @@
           }
         }
       },
-      "PriorityLevelDto2": {
+      "PriorityLevelDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {

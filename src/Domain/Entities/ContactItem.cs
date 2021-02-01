@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace jCoreDemoApp.Domain.Entities
 {
-    public class ContactItem : AuditableEntity, IHasDomainEvent
+    public class Contact : AuditableEntity, IHasDomainEvent
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -27,7 +27,7 @@ namespace jCoreDemoApp.Domain.Entities
             {
                 if (value == true && _deleted == false)
                 {                    
-                    DomainEvents.Add(new ContactItemDeletedEvent(this));
+                    DomainEvents.Add(new ContactDeletedEvent(this));
                 }
 
                 _deleted = value;
