@@ -2,7 +2,12 @@
 
 **Sample WebApi/Angular application demonstrating ASP.NET Core API features**
 
-This is a sample **ASP.NET Core application** that *demonstrates* basic features of `ASP.NET` Core in an API backend application with an Angular frontend. The application allows browsing and editing of a list of contacts.
+This is a sample **ASP.NET Core application** that *demonstrates* basic features of `ASP.NET` Core in an API backend application with an Angular frontend. The application allows browsing and editing of a list of CONTACTS and TODOS. 
+
+This Solution follows the Clean Architecture.
+
+More instructions at https://www.softwave.cr/posts/creating-web-application-on-net-core-webapi/
+
 
 ### ASP.NET Core Features
 The **ASP.NET Core** Backend demonstrates:
