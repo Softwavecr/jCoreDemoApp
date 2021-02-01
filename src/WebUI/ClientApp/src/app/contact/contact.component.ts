@@ -9,11 +9,6 @@ import { ContactsClient, ContactPaginatedDto } from '../web-api-client';
 export class ContactComponent {
   public contacts: ContactPaginatedDto[];
 
-//https://stackoverflow.com/questions/40649799/create-component-to-specific-module-with-angular-cli
-//https://angular-2-training-book.rangle.io/modules/multiple-elements
-//https://www.pluralsight.com/guides/angular-module-declaring-components
-
-  //constructor() {
   constructor(private client: ContactsClient) {    
     client.getContactsWithPagination(1,10).subscribe(result => {
       this.contacts = result.items;
