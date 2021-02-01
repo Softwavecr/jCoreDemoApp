@@ -3,13 +3,13 @@ using jCoreDemoApp.Domain.Entities;
 
 namespace jCoreDemoApp.Domain.Events
 {
-    public class ContactItemCreatedEvent : DomainEvent
+    public class ContactCreatedEvent : DomainEvent
     {
-        public ContactItemCreatedEvent(ContactItem item)
+        public ContactCreatedEvent(Contact item)
         {
             Item = item;
         }
 
-        public ContactItem Item { get; }
+        public Contact Item { get; }
     }
 }

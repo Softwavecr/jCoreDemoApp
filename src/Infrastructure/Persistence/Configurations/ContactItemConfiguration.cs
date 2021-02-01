@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace jCoreDemoApp.Infrastructure.Persistence.Configurations
 {
-    public class ContactItemConfiguration : IEntityTypeConfiguration<ContactItem>
+    public class ContactConfiguration : IEntityTypeConfiguration<Contact>
     {
-        public void Configure(EntityTypeBuilder<ContactItem> builder)
+        public void Configure(EntityTypeBuilder<Contact> builder)
         {
             builder.Ignore(e => e.DomainEvents);
 

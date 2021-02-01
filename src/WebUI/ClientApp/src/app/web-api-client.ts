@@ -14,18 +14,18 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
-export interface IContactItemsClient {
-    getContactItemsWithPagination(listId: number | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfContactItemDto>;
-    create(command: CreateContactItemCommand): Observable<number>;
-    update(id: number, command: UpdateContactItemCommand): Observable<FileResponse>;
+export interface IContactsClient {
+    getContactsWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfContactPaginatedDto>;
+    create(command: CreateContactCommand): Observable<number>;
+    update(id: number, command: UpdateContactCommand): Observable<FileResponse>;
     delete(id: number): Observable<FileResponse>;
-    updateItemDetails(id: number | undefined, command: UpdateContactItemDetailCommand): Observable<FileResponse>;
+    updateItemDetails(id: number | undefined, command: UpdateContactDetailCommand): Observable<FileResponse>;
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class ContactItemsClient implements IContactItemsClient {
+export class ContactsClient implements IContactsClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -35,12 +35,8 @@ export class ContactItemsClient implements IContactItemsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getContactItemsWithPagination(listId: number | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfContactItemDto> {
-        let url_ = this.baseUrl + "/api/ContactItems?";
-        if (listId === null)
-            throw new Error("The parameter 'listId' cannot be null.");
-        else if (listId !== undefined)
-            url_ += "ListId=" + encodeURIComponent("" + listId) + "&";
+    getContactsWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfContactPaginatedDto> {
+        let url_ = this.baseUrl + "/api/Contacts?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
         else if (pageNumber !== undefined)
@@ -60,20 +56,20 @@ export class ContactItemsClient implements IContactItemsClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetContactItemsWithPagination(response_);
+            return this.processGetContactsWithPagination(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetContactItemsWithPagination(<any>response_);
+                    return this.processGetContactsWithPagination(<any>response_);
                 } catch (e) {
-                    return <Observable<PaginatedListOfContactItemDto>><any>_observableThrow(e);
+                    return <Observable<PaginatedListOfContactPaginatedDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<PaginatedListOfContactItemDto>><any>_observableThrow(response_);
+                return <Observable<PaginatedListOfContactPaginatedDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGetContactItemsWithPagination(response: HttpResponseBase): Observable<PaginatedListOfContactItemDto> {
+    protected processGetContactsWithPagination(response: HttpResponseBase): Observable<PaginatedListOfContactPaginatedDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -84,7 +80,7 @@ export class ContactItemsClient implements IContactItemsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PaginatedListOfContactItemDto.fromJS(resultData200);
+            result200 = PaginatedListOfContactPaginatedDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -92,11 +88,11 @@ export class ContactItemsClient implements IContactItemsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<PaginatedListOfContactItemDto>(<any>null);
+        return _observableOf<PaginatedListOfContactPaginatedDto>(<any>null);
     }
 
-    create(command: CreateContactItemCommand): Observable<number> {
-        let url_ = this.baseUrl + "/api/ContactItems";
+    create(command: CreateContactCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/Contacts";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -147,8 +143,8 @@ export class ContactItemsClient implements IContactItemsClient {
         return _observableOf<number>(<any>null);
     }
 
-    update(id: number, command: UpdateContactItemCommand): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/ContactItems/{id}";
+    update(id: number, command: UpdateContactCommand): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/Contacts/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -201,7 +197,7 @@ export class ContactItemsClient implements IContactItemsClient {
     }
 
     delete(id: number): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/ContactItems/{id}";
+        let url_ = this.baseUrl + "/api/Contacts/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -249,8 +245,8 @@ export class ContactItemsClient implements IContactItemsClient {
         return _observableOf<FileResponse>(<any>null);
     }
 
-    updateItemDetails(id: number | undefined, command: UpdateContactItemDetailCommand): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/ContactItems/UpdateItemDetails?";
+    updateItemDetails(id: number | undefined, command: UpdateContactDetailCommand): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/Contacts/UpdateItemDetails?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
         else if (id !== undefined)
@@ -304,18 +300,14 @@ export class ContactItemsClient implements IContactItemsClient {
     }
 }
 
-export interface IContactListsClient {
-    get(): Observable<ContactsVm>;
-    create(command: CreateContactListCommand): Observable<number>;
-    get2(id: number): Observable<FileResponse>;
-    update(id: number, command: UpdateContactListCommand): Observable<FileResponse>;
-    delete(id: number): Observable<FileResponse>;
+export interface IOrganizationSummaryClient {
+    get(): Observable<FileResponse>;
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class ContactListsClient implements IContactListsClient {
+export class OrganizationSummaryClient implements IOrganizationSummaryClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -325,15 +317,15 @@ export class ContactListsClient implements IContactListsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    get(): Observable<ContactsVm> {
-        let url_ = this.baseUrl + "/api/ContactLists";
+    get(): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/OrganizationSummary";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "application/json"
+                "Accept": "application/octet-stream"
             })
         };
 
@@ -344,109 +336,6 @@ export class ContactListsClient implements IContactListsClient {
                 try {
                     return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<ContactsVm>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<ContactsVm>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processGet(response: HttpResponseBase): Observable<ContactsVm> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ContactsVm.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<ContactsVm>(<any>null);
-    }
-
-    create(command: CreateContactListCommand): Observable<number> {
-        let url_ = this.baseUrl + "/api/ContactLists";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreate(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCreate(<any>response_);
-                } catch (e) {
-                    return <Observable<number>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<number>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processCreate(response: HttpResponseBase): Observable<number> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<number>(<any>null);
-    }
-
-    get2(id: number): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/ContactLists/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGet2(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGet2(<any>response_);
-                } catch (e) {
                     return <Observable<FileResponse>><any>_observableThrow(e);
                 }
             } else
@@ -454,109 +343,7 @@ export class ContactListsClient implements IContactListsClient {
         }));
     }
 
-    protected processGet2(response: HttpResponseBase): Observable<FileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse>(<any>null);
-    }
-
-    update(id: number, command: UpdateContactListCommand): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/ContactLists/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpdate(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUpdate(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processUpdate(response: HttpResponseBase): Observable<FileResponse> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<FileResponse>(<any>null);
-    }
-
-    delete(id: number): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/api/ContactLists/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/octet-stream"
-            })
-        };
-
-        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDelete(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDelete(<any>response_);
-                } catch (e) {
-                    return <Observable<FileResponse>><any>_observableThrow(e);
-                }
-            } else
-                return <Observable<FileResponse>><any>_observableThrow(response_);
-        }));
-    }
-
-    protected processDelete(response: HttpResponseBase): Observable<FileResponse> {
+    protected processGet(response: HttpResponseBase): Observable<FileResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1210,15 +997,15 @@ export class WeatherForecastClient implements IWeatherForecastClient {
     }
 }
 
-export class PaginatedListOfContactItemDto implements IPaginatedListOfContactItemDto {
-    items?: ContactItemDto[] | undefined;
+export class PaginatedListOfContactPaginatedDto implements IPaginatedListOfContactPaginatedDto {
+    items?: ContactPaginatedDto[] | undefined;
     pageIndex?: number;
     totalPages?: number;
     totalCount?: number;
     hasPreviousPage?: boolean;
     hasNextPage?: boolean;
 
-    constructor(data?: IPaginatedListOfContactItemDto) {
+    constructor(data?: IPaginatedListOfContactPaginatedDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1232,7 +1019,7 @@ export class PaginatedListOfContactItemDto implements IPaginatedListOfContactIte
             if (Array.isArray(_data["items"])) {
                 this.items = [] as any;
                 for (let item of _data["items"])
-                    this.items!.push(ContactItemDto.fromJS(item));
+                    this.items!.push(ContactPaginatedDto.fromJS(item));
             }
             this.pageIndex = _data["pageIndex"];
             this.totalPages = _data["totalPages"];
@@ -1242,9 +1029,9 @@ export class PaginatedListOfContactItemDto implements IPaginatedListOfContactIte
         }
     }
 
-    static fromJS(data: any): PaginatedListOfContactItemDto {
+    static fromJS(data: any): PaginatedListOfContactPaginatedDto {
         data = typeof data === 'object' ? data : {};
-        let result = new PaginatedListOfContactItemDto();
+        let result = new PaginatedListOfContactPaginatedDto();
         result.init(data);
         return result;
     }
@@ -1265,8 +1052,8 @@ export class PaginatedListOfContactItemDto implements IPaginatedListOfContactIte
     }
 }
 
-export interface IPaginatedListOfContactItemDto {
-    items?: ContactItemDto[] | undefined;
+export interface IPaginatedListOfContactPaginatedDto {
+    items?: ContactPaginatedDto[] | undefined;
     pageIndex?: number;
     totalPages?: number;
     totalCount?: number;
@@ -1274,15 +1061,20 @@ export interface IPaginatedListOfContactItemDto {
     hasNextPage?: boolean;
 }
 
-export class ContactItemDto implements IContactItemDto {
+export class ContactPaginatedDto implements IContactPaginatedDto {
     id?: number;
-    listId?: number;
-    title?: string | undefined;
-    done?: boolean;
+    name?: string | undefined;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: boolean;
     priority?: number;
-    note?: string | undefined;
 
-    constructor(data?: IContactItemDto) {
+    constructor(data?: IContactPaginatedDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1294,17 +1086,22 @@ export class ContactItemDto implements IContactItemDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.listId = _data["listId"];
-            this.title = _data["title"];
-            this.done = _data["done"];
+            this.name = _data["name"];
+            this.company = _data["company"];
+            this.profileImage = _data["profileImage"];
+            this.email = _data["email"];
+            this.birthDate = _data["birthDate"];
+            this.phoneNumberWork = _data["phoneNumberWork"];
+            this.phoneNumberPersonal = _data["phoneNumberPersonal"];
+            this.address = _data["address"];
+            this.deleted = _data["deleted"];
             this.priority = _data["priority"];
-            this.note = _data["note"];
         }
     }
 
-    static fromJS(data: any): ContactItemDto {
+    static fromJS(data: any): ContactPaginatedDto {
         data = typeof data === 'object' ? data : {};
-        let result = new ContactItemDto();
+        let result = new ContactPaginatedDto();
         result.init(data);
         return result;
     }
@@ -1312,70 +1109,48 @@ export class ContactItemDto implements IContactItemDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["listId"] = this.listId;
-        data["title"] = this.title;
-        data["done"] = this.done;
+        data["name"] = this.name;
+        data["company"] = this.company;
+        data["profileImage"] = this.profileImage;
+        data["email"] = this.email;
+        data["birthDate"] = this.birthDate;
+        data["phoneNumberWork"] = this.phoneNumberWork;
+        data["phoneNumberPersonal"] = this.phoneNumberPersonal;
+        data["address"] = this.address;
+        data["deleted"] = this.deleted;
         data["priority"] = this.priority;
-        data["note"] = this.note;
         return data; 
     }
 }
 
-export interface IContactItemDto {
+export interface IContactPaginatedDto {
     id?: number;
-    listId?: number;
-    title?: string | undefined;
-    done?: boolean;
+    name?: string | undefined;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: boolean;
     priority?: number;
-    note?: string | undefined;
 }
 
-export class CreateContactItemCommand implements ICreateContactItemCommand {
-    listId?: number;
-    name?: string | undefined;
-
-    constructor(data?: ICreateContactItemCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.listId = _data["listId"];
-            this.name = _data["name"];
-        }
-    }
-
-    static fromJS(data: any): CreateContactItemCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateContactItemCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["listId"] = this.listId;
-        data["name"] = this.name;
-        return data; 
-    }
-}
-
-export interface ICreateContactItemCommand {
-    listId?: number;
-    name?: string | undefined;
-}
-
-export class UpdateContactItemCommand implements IUpdateContactItemCommand {
+export class CreateContactCommand implements ICreateContactCommand {
     id?: number;
     name?: string | undefined;
-    done?: boolean;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: boolean;
+    priority?: number;
 
-    constructor(data?: IUpdateContactItemCommand) {
+    constructor(data?: ICreateContactCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1388,59 +1163,21 @@ export class UpdateContactItemCommand implements IUpdateContactItemCommand {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
-            this.done = _data["done"];
-        }
-    }
-
-    static fromJS(data: any): UpdateContactItemCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateContactItemCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["done"] = this.done;
-        return data; 
-    }
-}
-
-export interface IUpdateContactItemCommand {
-    id?: number;
-    name?: string | undefined;
-    done?: boolean;
-}
-
-export class UpdateContactItemDetailCommand implements IUpdateContactItemDetailCommand {
-    id?: number;
-    listId?: number;
-    priority?: PriorityLevel;
-    note?: string | undefined;
-
-    constructor(data?: IUpdateContactItemDetailCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.listId = _data["listId"];
+            this.company = _data["company"];
+            this.profileImage = _data["profileImage"];
+            this.email = _data["email"];
+            this.birthDate = _data["birthDate"];
+            this.phoneNumberWork = _data["phoneNumberWork"];
+            this.phoneNumberPersonal = _data["phoneNumberPersonal"];
+            this.address = _data["address"];
+            this.deleted = _data["deleted"];
             this.priority = _data["priority"];
-            this.note = _data["note"];
         }
     }
 
-    static fromJS(data: any): UpdateContactItemDetailCommand {
+    static fromJS(data: any): CreateContactCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateContactItemDetailCommand();
+        let result = new CreateContactCommand();
         result.init(data);
         return result;
     }
@@ -1448,130 +1185,48 @@ export class UpdateContactItemDetailCommand implements IUpdateContactItemDetailC
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["listId"] = this.listId;
-        data["priority"] = this.priority;
-        data["note"] = this.note;
-        return data; 
-    }
-}
-
-export interface IUpdateContactItemDetailCommand {
-    id?: number;
-    listId?: number;
-    priority?: PriorityLevel;
-    note?: string | undefined;
-}
-
-export enum PriorityLevel {
-    None = 0,
-    Low = 1,
-    Medium = 2,
-    High = 3,
-}
-
-export class ContactsVm implements IContactsVm {
-    priorityLevels?: PriorityLevelDto[] | undefined;
-    lists?: ContactListDto[] | undefined;
-
-    constructor(data?: IContactsVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["priorityLevels"])) {
-                this.priorityLevels = [] as any;
-                for (let item of _data["priorityLevels"])
-                    this.priorityLevels!.push(PriorityLevelDto.fromJS(item));
-            }
-            if (Array.isArray(_data["lists"])) {
-                this.lists = [] as any;
-                for (let item of _data["lists"])
-                    this.lists!.push(ContactListDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): ContactsVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new ContactsVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.priorityLevels)) {
-            data["priorityLevels"] = [];
-            for (let item of this.priorityLevels)
-                data["priorityLevels"].push(item.toJSON());
-        }
-        if (Array.isArray(this.lists)) {
-            data["lists"] = [];
-            for (let item of this.lists)
-                data["lists"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IContactsVm {
-    priorityLevels?: PriorityLevelDto[] | undefined;
-    lists?: ContactListDto[] | undefined;
-}
-
-export class PriorityLevelDto implements IPriorityLevelDto {
-    value?: number;
-    name?: string | undefined;
-
-    constructor(data?: IPriorityLevelDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.value = _data["value"];
-            this.name = _data["name"];
-        }
-    }
-
-    static fromJS(data: any): PriorityLevelDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new PriorityLevelDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["value"] = this.value;
         data["name"] = this.name;
+        data["company"] = this.company;
+        data["profileImage"] = this.profileImage;
+        data["email"] = this.email;
+        data["birthDate"] = this.birthDate;
+        data["phoneNumberWork"] = this.phoneNumberWork;
+        data["phoneNumberPersonal"] = this.phoneNumberPersonal;
+        data["address"] = this.address;
+        data["deleted"] = this.deleted;
+        data["priority"] = this.priority;
         return data; 
     }
 }
 
-export interface IPriorityLevelDto {
-    value?: number;
+export interface ICreateContactCommand {
+    id?: number;
     name?: string | undefined;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: boolean;
+    priority?: number;
 }
 
-export class ContactListDto implements IContactListDto {
+export class UpdateContactCommand implements IUpdateContactCommand {
     id?: number;
-    title?: string | undefined;
-    colour?: string | undefined;
-    items?: ContactItemDto[] | undefined;
+    name?: string | undefined;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: boolean;
+    priority?: number;
 
-    constructor(data?: IContactListDto) {
+    constructor(data?: IUpdateContactCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1583,19 +1238,22 @@ export class ContactListDto implements IContactListDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.title = _data["title"];
-            this.colour = _data["colour"];
-            if (Array.isArray(_data["items"])) {
-                this.items = [] as any;
-                for (let item of _data["items"])
-                    this.items!.push(ContactItemDto.fromJS(item));
-            }
+            this.name = _data["name"];
+            this.company = _data["company"];
+            this.profileImage = _data["profileImage"];
+            this.email = _data["email"];
+            this.birthDate = _data["birthDate"];
+            this.phoneNumberWork = _data["phoneNumberWork"];
+            this.phoneNumberPersonal = _data["phoneNumberPersonal"];
+            this.address = _data["address"];
+            this.deleted = _data["deleted"];
+            this.priority = _data["priority"];
         }
     }
 
-    static fromJS(data: any): ContactListDto {
+    static fromJS(data: any): UpdateContactCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new ContactListDto();
+        let result = new UpdateContactCommand();
         result.init(data);
         return result;
     }
@@ -1603,65 +1261,48 @@ export class ContactListDto implements IContactListDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["title"] = this.title;
-        data["colour"] = this.colour;
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
+        data["name"] = this.name;
+        data["company"] = this.company;
+        data["profileImage"] = this.profileImage;
+        data["email"] = this.email;
+        data["birthDate"] = this.birthDate;
+        data["phoneNumberWork"] = this.phoneNumberWork;
+        data["phoneNumberPersonal"] = this.phoneNumberPersonal;
+        data["address"] = this.address;
+        data["deleted"] = this.deleted;
+        data["priority"] = this.priority;
         return data; 
     }
 }
 
-export interface IContactListDto {
+export interface IUpdateContactCommand {
     id?: number;
-    title?: string | undefined;
-    colour?: string | undefined;
-    items?: ContactItemDto[] | undefined;
+    name?: string | undefined;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: boolean;
+    priority?: number;
 }
 
-export class CreateContactListCommand implements ICreateContactListCommand {
-    title?: string | undefined;
-
-    constructor(data?: ICreateContactListCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.title = _data["title"];
-        }
-    }
-
-    static fromJS(data: any): CreateContactListCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateContactListCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["title"] = this.title;
-        return data; 
-    }
-}
-
-export interface ICreateContactListCommand {
-    title?: string | undefined;
-}
-
-export class UpdateContactListCommand implements IUpdateContactListCommand {
+export class UpdateContactDetailCommand implements IUpdateContactDetailCommand {
     id?: number;
-    title?: string | undefined;
+    name?: string | undefined;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: string | undefined;
+    priority?: number;
 
-    constructor(data?: IUpdateContactListCommand) {
+    constructor(data?: IUpdateContactDetailCommand) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1673,13 +1314,22 @@ export class UpdateContactListCommand implements IUpdateContactListCommand {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.title = _data["title"];
+            this.name = _data["name"];
+            this.company = _data["company"];
+            this.profileImage = _data["profileImage"];
+            this.email = _data["email"];
+            this.birthDate = _data["birthDate"];
+            this.phoneNumberWork = _data["phoneNumberWork"];
+            this.phoneNumberPersonal = _data["phoneNumberPersonal"];
+            this.address = _data["address"];
+            this.deleted = _data["deleted"];
+            this.priority = _data["priority"];
         }
     }
 
-    static fromJS(data: any): UpdateContactListCommand {
+    static fromJS(data: any): UpdateContactDetailCommand {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateContactListCommand();
+        let result = new UpdateContactDetailCommand();
         result.init(data);
         return result;
     }
@@ -1687,14 +1337,32 @@ export class UpdateContactListCommand implements IUpdateContactListCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["title"] = this.title;
+        data["name"] = this.name;
+        data["company"] = this.company;
+        data["profileImage"] = this.profileImage;
+        data["email"] = this.email;
+        data["birthDate"] = this.birthDate;
+        data["phoneNumberWork"] = this.phoneNumberWork;
+        data["phoneNumberPersonal"] = this.phoneNumberPersonal;
+        data["address"] = this.address;
+        data["deleted"] = this.deleted;
+        data["priority"] = this.priority;
         return data; 
     }
 }
 
-export interface IUpdateContactListCommand {
+export interface IUpdateContactDetailCommand {
     id?: number;
-    title?: string | undefined;
+    name?: string | undefined;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: string | undefined;
+    priority?: number;
 }
 
 export class PaginatedListOfTodoItemDto implements IPaginatedListOfTodoItemDto {
@@ -1949,8 +1617,15 @@ export interface IUpdateTodoItemDetailCommand {
     note?: string | undefined;
 }
 
+export enum PriorityLevel {
+    None = 0,
+    Low = 1,
+    Medium = 2,
+    High = 3,
+}
+
 export class TodosVm implements ITodosVm {
-    priorityLevels?: PriorityLevelDto2[] | undefined;
+    priorityLevels?: PriorityLevelDto[] | undefined;
     lists?: TodoListDto[] | undefined;
 
     constructor(data?: ITodosVm) {
@@ -1967,7 +1642,7 @@ export class TodosVm implements ITodosVm {
             if (Array.isArray(_data["priorityLevels"])) {
                 this.priorityLevels = [] as any;
                 for (let item of _data["priorityLevels"])
-                    this.priorityLevels!.push(PriorityLevelDto2.fromJS(item));
+                    this.priorityLevels!.push(PriorityLevelDto.fromJS(item));
             }
             if (Array.isArray(_data["lists"])) {
                 this.lists = [] as any;
@@ -2001,15 +1676,15 @@ export class TodosVm implements ITodosVm {
 }
 
 export interface ITodosVm {
-    priorityLevels?: PriorityLevelDto2[] | undefined;
+    priorityLevels?: PriorityLevelDto[] | undefined;
     lists?: TodoListDto[] | undefined;
 }
 
-export class PriorityLevelDto2 implements IPriorityLevelDto2 {
+export class PriorityLevelDto implements IPriorityLevelDto {
     value?: number;
     name?: string | undefined;
 
-    constructor(data?: IPriorityLevelDto2) {
+    constructor(data?: IPriorityLevelDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2025,9 +1700,9 @@ export class PriorityLevelDto2 implements IPriorityLevelDto2 {
         }
     }
 
-    static fromJS(data: any): PriorityLevelDto2 {
+    static fromJS(data: any): PriorityLevelDto {
         data = typeof data === 'object' ? data : {};
-        let result = new PriorityLevelDto2();
+        let result = new PriorityLevelDto();
         result.init(data);
         return result;
     }
@@ -2040,7 +1715,7 @@ export class PriorityLevelDto2 implements IPriorityLevelDto2 {
     }
 }
 
-export interface IPriorityLevelDto2 {
+export interface IPriorityLevelDto {
     value?: number;
     name?: string | undefined;
 }

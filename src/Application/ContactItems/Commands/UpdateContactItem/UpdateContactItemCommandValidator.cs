@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace jCoreDemoApp.Application.ContactItems.Commands.UpdateContactItem
+namespace jCoreDemoApp.Application.Contacts.Commands.UpdateContact
 {
-    public class UpdateContactItemCommandValidator : AbstractValidator<UpdateContactItemCommand>
+    public class UpdateContactCommandValidator : AbstractValidator<UpdateContactCommand>
     {
-        public UpdateContactItemCommandValidator()
+        public UpdateContactCommandValidator()
         {
             RuleFor(v => v.Name)
                 .MaximumLength(200)

@@ -1,0 +1,26 @@
+<h1 id="tableLabel">Contacts</h1>
+
+<p>Fetching contacts from the server.</p>
+
+<p *ngIf="!contacts"><em>Loading...</em></p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="contacts">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Company</th>
+      <th>Email</th>
+      <th>Address</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let contact of contacts">
+      <td>{{ contact.id }}</td>
+      <td>{{ contact.name }}</td>
+      <td>{{ contact.company }}</td>
+      <td>{{ contact.email }}</td>
+      <td>{{ contact.address }}</td>
+    </tr>
+  </tbody>
+</table>

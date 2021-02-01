@@ -1,14 +1,14 @@
 ﻿using FluentValidation;
 
-namespace jCoreDemoApp.Application.ContactItems.Queries.GetContactItemsWithPagination
+namespace jCoreDemoApp.Application.Contacts.Queries.GetContactsWithPagination
 {
-    public class GetContactItemsWithPaginationQueryValidator : AbstractValidator<GetContactItemsWithPaginationQuery>
+    public class GetContactsWithPaginationQueryValidator : AbstractValidator<GetContactsWithPaginationQuery>
     {
-        public GetContactItemsWithPaginationQueryValidator()
+        public GetContactsWithPaginationQueryValidator()
         {
-            RuleFor(x => x.ListId)
-                .NotNull()
-                .NotEmpty().WithMessage("ListId is required.");
+            // RuleFor(x => x.Id)
+            //     .NotNull()
+            //     .NotEmpty().WithMessage("Id is required.");
 
             RuleFor(x => x.PageNumber)
                 .GreaterThanOrEqualTo(1).WithMessage("PageNumber at least greater than or equal to 1.");

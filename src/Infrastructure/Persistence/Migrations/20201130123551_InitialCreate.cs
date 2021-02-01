@@ -239,7 +239,7 @@ namespace jCoreDemoApp.Infrastructure.Persistence.Migrations
 
 
             migrationBuilder.CreateTable(
-                name: "ContactItems",
+                name: "Contacts",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -260,9 +260,9 @@ namespace jCoreDemoApp.Infrastructure.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ContactItems", x => x.Id);
+                    table.PrimaryKey("PK_Contacts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ContactItems_ContactsLists_ListId",
+                        name: "FK_Contacts_ContactsLists_ListId",
                         column: x => x.ListId,
                         principalTable: "ContactLists",
                         principalColumn: "Id",
@@ -341,8 +341,8 @@ namespace jCoreDemoApp.Infrastructure.Persistence.Migrations
                 column: "ListId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContactItems_ListId",
-                table: "ContactItems",
+                name: "IX_Contacts_ListId",
+                table: "Contacts",
                 column: "ListId");
         }
 
@@ -382,7 +382,7 @@ namespace jCoreDemoApp.Infrastructure.Persistence.Migrations
                 name: "TodoLists");
 
             migrationBuilder.DropTable(
-                name: "ContactItems");
+                name: "Contacts");
 
             migrationBuilder.DropTable(
                 name: "ContactLists");                
