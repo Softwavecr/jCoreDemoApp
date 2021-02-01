@@ -15,7 +15,7 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IContactItemsClient {
-    getContactItemsWithPagination(listId: number | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfContactItemDto>;
+    getContactItemsWithPagination(id: number | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfContactItemDto>;
     create(command: CreateContactItemCommand): Observable<number>;
     update(id: number, command: UpdateContactItemCommand): Observable<FileResponse>;
     delete(id: number): Observable<FileResponse>;
@@ -35,12 +35,12 @@ export class ContactItemsClient implements IContactItemsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    getContactItemsWithPagination(listId: number | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfContactItemDto> {
+    getContactItemsWithPagination(id: number | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedListOfContactItemDto> {
         let url_ = this.baseUrl + "/api/ContactItems?";
-        if (listId === null)
-            throw new Error("The parameter 'listId' cannot be null.");
-        else if (listId !== undefined)
-            url_ += "ListId=" + encodeURIComponent("" + listId) + "&";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
         else if (pageNumber !== undefined)
@@ -1276,11 +1276,16 @@ export interface IPaginatedListOfContactItemDto {
 
 export class ContactItemDto implements IContactItemDto {
     id?: number;
-    listId?: number;
-    title?: string | undefined;
-    done?: boolean;
+    name?: string | undefined;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: boolean;
     priority?: number;
-    note?: string | undefined;
 
     constructor(data?: IContactItemDto) {
         if (data) {
@@ -1294,11 +1299,16 @@ export class ContactItemDto implements IContactItemDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.listId = _data["listId"];
-            this.title = _data["title"];
-            this.done = _data["done"];
+            this.name = _data["name"];
+            this.company = _data["company"];
+            this.profileImage = _data["profileImage"];
+            this.email = _data["email"];
+            this.birthDate = _data["birthDate"];
+            this.phoneNumberWork = _data["phoneNumberWork"];
+            this.phoneNumberPersonal = _data["phoneNumberPersonal"];
+            this.address = _data["address"];
+            this.deleted = _data["deleted"];
             this.priority = _data["priority"];
-            this.note = _data["note"];
         }
     }
 
@@ -1312,27 +1322,46 @@ export class ContactItemDto implements IContactItemDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["listId"] = this.listId;
-        data["title"] = this.title;
-        data["done"] = this.done;
+        data["name"] = this.name;
+        data["company"] = this.company;
+        data["profileImage"] = this.profileImage;
+        data["email"] = this.email;
+        data["birthDate"] = this.birthDate;
+        data["phoneNumberWork"] = this.phoneNumberWork;
+        data["phoneNumberPersonal"] = this.phoneNumberPersonal;
+        data["address"] = this.address;
+        data["deleted"] = this.deleted;
         data["priority"] = this.priority;
-        data["note"] = this.note;
         return data; 
     }
 }
 
 export interface IContactItemDto {
     id?: number;
-    listId?: number;
-    title?: string | undefined;
-    done?: boolean;
+    name?: string | undefined;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: boolean;
     priority?: number;
-    note?: string | undefined;
 }
 
 export class CreateContactItemCommand implements ICreateContactItemCommand {
-    listId?: number;
+    id?: number;
     name?: string | undefined;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: boolean;
+    priority?: number;
 
     constructor(data?: ICreateContactItemCommand) {
         if (data) {
@@ -1345,8 +1374,17 @@ export class CreateContactItemCommand implements ICreateContactItemCommand {
 
     init(_data?: any) {
         if (_data) {
-            this.listId = _data["listId"];
+            this.id = _data["id"];
             this.name = _data["name"];
+            this.company = _data["company"];
+            this.profileImage = _data["profileImage"];
+            this.email = _data["email"];
+            this.birthDate = _data["birthDate"];
+            this.phoneNumberWork = _data["phoneNumberWork"];
+            this.phoneNumberPersonal = _data["phoneNumberPersonal"];
+            this.address = _data["address"];
+            this.deleted = _data["deleted"];
+            this.priority = _data["priority"];
         }
     }
 
@@ -1359,21 +1397,47 @@ export class CreateContactItemCommand implements ICreateContactItemCommand {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["listId"] = this.listId;
+        data["id"] = this.id;
         data["name"] = this.name;
+        data["company"] = this.company;
+        data["profileImage"] = this.profileImage;
+        data["email"] = this.email;
+        data["birthDate"] = this.birthDate;
+        data["phoneNumberWork"] = this.phoneNumberWork;
+        data["phoneNumberPersonal"] = this.phoneNumberPersonal;
+        data["address"] = this.address;
+        data["deleted"] = this.deleted;
+        data["priority"] = this.priority;
         return data; 
     }
 }
 
 export interface ICreateContactItemCommand {
-    listId?: number;
+    id?: number;
     name?: string | undefined;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: boolean;
+    priority?: number;
 }
 
 export class UpdateContactItemCommand implements IUpdateContactItemCommand {
     id?: number;
     name?: string | undefined;
-    done?: boolean;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: boolean;
+    priority?: number;
 
     constructor(data?: IUpdateContactItemCommand) {
         if (data) {
@@ -1388,7 +1452,15 @@ export class UpdateContactItemCommand implements IUpdateContactItemCommand {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
-            this.done = _data["done"];
+            this.company = _data["company"];
+            this.profileImage = _data["profileImage"];
+            this.email = _data["email"];
+            this.birthDate = _data["birthDate"];
+            this.phoneNumberWork = _data["phoneNumberWork"];
+            this.phoneNumberPersonal = _data["phoneNumberPersonal"];
+            this.address = _data["address"];
+            this.deleted = _data["deleted"];
+            this.priority = _data["priority"];
         }
     }
 
@@ -1403,7 +1475,15 @@ export class UpdateContactItemCommand implements IUpdateContactItemCommand {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        data["done"] = this.done;
+        data["company"] = this.company;
+        data["profileImage"] = this.profileImage;
+        data["email"] = this.email;
+        data["birthDate"] = this.birthDate;
+        data["phoneNumberWork"] = this.phoneNumberWork;
+        data["phoneNumberPersonal"] = this.phoneNumberPersonal;
+        data["address"] = this.address;
+        data["deleted"] = this.deleted;
+        data["priority"] = this.priority;
         return data; 
     }
 }
@@ -1411,14 +1491,29 @@ export class UpdateContactItemCommand implements IUpdateContactItemCommand {
 export interface IUpdateContactItemCommand {
     id?: number;
     name?: string | undefined;
-    done?: boolean;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: boolean;
+    priority?: number;
 }
 
 export class UpdateContactItemDetailCommand implements IUpdateContactItemDetailCommand {
     id?: number;
-    listId?: number;
-    priority?: PriorityLevel;
-    note?: string | undefined;
+    name?: string | undefined;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: string | undefined;
+    priority?: number;
 
     constructor(data?: IUpdateContactItemDetailCommand) {
         if (data) {
@@ -1432,9 +1527,16 @@ export class UpdateContactItemDetailCommand implements IUpdateContactItemDetailC
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.listId = _data["listId"];
+            this.name = _data["name"];
+            this.company = _data["company"];
+            this.profileImage = _data["profileImage"];
+            this.email = _data["email"];
+            this.birthDate = _data["birthDate"];
+            this.phoneNumberWork = _data["phoneNumberWork"];
+            this.phoneNumberPersonal = _data["phoneNumberPersonal"];
+            this.address = _data["address"];
+            this.deleted = _data["deleted"];
             this.priority = _data["priority"];
-            this.note = _data["note"];
         }
     }
 
@@ -1448,25 +1550,32 @@ export class UpdateContactItemDetailCommand implements IUpdateContactItemDetailC
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["listId"] = this.listId;
+        data["name"] = this.name;
+        data["company"] = this.company;
+        data["profileImage"] = this.profileImage;
+        data["email"] = this.email;
+        data["birthDate"] = this.birthDate;
+        data["phoneNumberWork"] = this.phoneNumberWork;
+        data["phoneNumberPersonal"] = this.phoneNumberPersonal;
+        data["address"] = this.address;
+        data["deleted"] = this.deleted;
         data["priority"] = this.priority;
-        data["note"] = this.note;
         return data; 
     }
 }
 
 export interface IUpdateContactItemDetailCommand {
     id?: number;
-    listId?: number;
-    priority?: PriorityLevel;
-    note?: string | undefined;
-}
-
-export enum PriorityLevel {
-    None = 0,
-    Low = 1,
-    Medium = 2,
-    High = 3,
+    name?: string | undefined;
+    company?: string | undefined;
+    profileImage?: string | undefined;
+    email?: string | undefined;
+    birthDate?: string | undefined;
+    phoneNumberWork?: string | undefined;
+    phoneNumberPersonal?: string | undefined;
+    address?: string | undefined;
+    deleted?: string | undefined;
+    priority?: number;
 }
 
 export class ContactsVm implements IContactsVm {
@@ -1947,6 +2056,13 @@ export interface IUpdateTodoItemDetailCommand {
     listId?: number;
     priority?: PriorityLevel;
     note?: string | undefined;
+}
+
+export enum PriorityLevel {
+    None = 0,
+    Low = 1,
+    Medium = 2,
+    High = 3,
 }
 
 export class TodosVm implements ITodosVm {

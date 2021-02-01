@@ -21,7 +21,7 @@ namespace jCoreDemoApp.WebUI.Controllers
         [HttpGet("{id}")]
         public async Task<FileResult> Get(int id)
         {
-            var vm = await Mediator.Send(new ExportContactsQuery { ListId = id });
+            var vm = await Mediator.Send(new ExportContactsQuery { Id = id });
 
             return File(vm.Content, vm.ContentType, vm.FileName);
         }

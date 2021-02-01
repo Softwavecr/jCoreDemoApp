@@ -4,7 +4,8 @@ using jCoreDemoApp.Application.ContactItems.Commands.DeleteContactItem;
 using jCoreDemoApp.Application.ContactItems.Commands.UpdateContactItem;
 using jCoreDemoApp.Application.ContactItems.Commands.UpdateContactItemDetail;
 using jCoreDemoApp.Application.ContactItems.Queries.GetContactItemsWithPagination;
-using jCoreDemoApp.Application.ContactLists.Queries.GetContacts;
+using jCoreDemoApp.Application.ContactItems.Queries.GetContactItems;
+//using jCoreDemoApp.Application.ContactLists.Queries.GetContacts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -19,6 +20,24 @@ namespace jCoreDemoApp.WebUI.Controllers
         {
             return await Mediator.Send(query);
         }
+
+        [HttpGet]
+        public async Task<ActionResult<ContactItemDto>> GetContactItems()
+        {
+            return await Mediator.Send(new GetContactItemsQuery());
+        }
+
+    //     public async Task<IEnumerable<WeatherForecast>> Get()
+    //     {
+    //         return await Mediator.Send(new GetWeatherForecastsQuery());
+    //     }
+    // }
+
+        // [HttpGet]
+        // public async Task<ActionResult<ContactsVm>> Get()
+        // {
+        //     return await Mediator.Send(new GetContactsQuery());
+        // }
 
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateContactItemCommand command)
