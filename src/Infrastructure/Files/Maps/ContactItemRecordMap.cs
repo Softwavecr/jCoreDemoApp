@@ -9,7 +9,7 @@ namespace jCoreDemoApp.Infrastructure.Files.Maps
         public ContactItemRecordMap()
         {
             AutoMap(CultureInfo.InvariantCulture);
-            Map(m => m.Done).ConvertUsing(c => c.Done ? "Yes" : "No");
+            Map(m => m.Deleted).ConvertUsing(c => c.Deleted ? "Yes" : "No");
         }
     }
 }

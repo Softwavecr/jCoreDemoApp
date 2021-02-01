@@ -9,8 +9,6 @@ namespace jCoreDemoApp.Domain.Entities
     public class ContactItem : AuditableEntity, IHasDomainEvent
     {
         public int Id { get; set; }
-        public ContactList List { get; set; }
-        public int ListId { get; set; }
         public string Name { get; set; }
         public string Company { get; set; }
         public byte[] ProfileImage { get; set; }
@@ -19,23 +17,20 @@ namespace jCoreDemoApp.Domain.Entities
         public string PhoneNumberWork { get; set; }
         public string PhoneNumberPersonal { get; set; }
         public string Address { get; set; }
-
         public PriorityLevel Priority { get; set; }
-
         public DateTime? Reminder { get; set; }
-
-        private bool _done;
-        public bool Done
+        private bool _deleted;
+        public bool Deleted
         {
-            get => _done;
+            get => _deleted;
             set
             {
-                if (value == true && _done == false)
-                {
-                    DomainEvents.Add(new ContactItemCompletedEvent(this));
+                if (value == true && _deleted == false)
+                {                    
+                    DomainEvents.Add(new ContactItemDeletedEvent(this));
                 }
 
-                _done = value;
+                _deleted = value;
             }
         }
 

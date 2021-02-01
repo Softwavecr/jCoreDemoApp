@@ -3,7 +3,6 @@ using AutoMapper.QueryableExtensions;
 using jCoreDemoApp.Application.Common.Interfaces;
 using jCoreDemoApp.Application.Common.Mappings;
 using jCoreDemoApp.Application.Common.Models;
-using jCoreDemoApp.Application.ContactLists.Queries.GetContacts;
 using MediatR;
 using System.Linq;
 using System.Threading;
@@ -13,7 +12,7 @@ namespace jCoreDemoApp.Application.ContactItems.Queries.GetContactItemsWithPagin
 {
     public class GetContactItemsWithPaginationQuery : IRequest<PaginatedList<ContactItemDto>>
     {
-        public int ListId { get; set; }
+        public int Id { get; set; }
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
     }
@@ -32,10 +31,16 @@ namespace jCoreDemoApp.Application.ContactItems.Queries.GetContactItemsWithPagin
         public async Task<PaginatedList<ContactItemDto>> Handle(GetContactItemsWithPaginationQuery request, CancellationToken cancellationToken)
         {
             return await _context.ContactItems
-                .Where(x => x.ListId == request.ListId)
+                .Where(x => x.Id > 0)
                 .OrderBy(x => x.Name)
                 .ProjectTo<ContactItemDto>(_mapper.ConfigurationProvider)
-                .PaginatedListAsync(request.PageNumber, request.PageSize); ;
+                .PaginatedListAsync(request.PageNumber, request.PageSize);
+
+            // return await _context.ContactItems
+            //     .Where(x => x.Id == request.Id)
+            //     .OrderBy(x => x.Name)
+            //     .ProjectTo<ContactItemDto>(_mapper.ConfigurationProvider)
+            //     .PaginatedListAsync(request.PageNumber, request.PageSize);                
         }
     }
 }

@@ -11,7 +11,7 @@ namespace jCoreDemoApp.Application.ContactLists.Queries.ExportContacts
 {
     public class ExportContactsQuery : IRequest<ExportContactsVm>
     {
-        public int ListId { get; set; }
+        public int Id { get; set; }
     }
 
     public class ExportContactsQueryHandler : IRequestHandler<ExportContactsQuery, ExportContactsVm>
@@ -32,7 +32,7 @@ namespace jCoreDemoApp.Application.ContactLists.Queries.ExportContacts
             var vm = new ExportContactsVm();
 
             var records = await _context.ContactItems
-                    .Where(t => t.ListId == request.ListId)
+                    .Where(t => t.Id == request.Id)
                     .ProjectTo<ContactItemRecord>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken);
 

@@ -10,10 +10,16 @@ namespace jCoreDemoApp.Application.ContactItems.Commands.UpdateContactItem
     public class UpdateContactItemCommand : IRequest
     {
         public int Id { get; set; }
-
         public string Name { get; set; }
-
-        public bool Done { get; set; }
+        public string Company { get; set; }
+        public byte[] ProfileImage { get; set; }
+        public string Email { get; set; }
+        public string BirthDate { get; set; }
+        public string PhoneNumberWork { get; set; }
+        public string PhoneNumberPersonal { get; set; }
+        public string Address { get; set; }
+        public bool Deleted { get; set; }
+        public int Priority { get; set; }
     }
 
     public class UpdateContactItemCommandHandler : IRequestHandler<UpdateContactItemCommand>
@@ -33,9 +39,14 @@ namespace jCoreDemoApp.Application.ContactItems.Commands.UpdateContactItem
             {
                 throw new NotFoundException(nameof(ContactItem), request.Id);
             }
-
             entity.Name = request.Name;
-            entity.Done = request.Done;
+            entity.Company = request.Company;
+            entity.ProfileImage = request.ProfileImage;
+            entity.Email = request.Email;
+            entity.BirthDate = request.BirthDate;
+            entity.PhoneNumberWork = request.PhoneNumberWork;
+            entity.PhoneNumberPersonal = request.PhoneNumberPersonal;
+            entity.Address = request.Address;
 
             await _context.SaveChangesAsync(cancellationToken);
 

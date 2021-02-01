@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace jCoreDemoApp.Application.ContactItems.EventHandlers
 {
-    public class ContactItemCompletedEventHandler : INotificationHandler<DomainEventNotification<ContactItemCompletedEvent>>
+    public class ContactItemCompletedEventHandler : INotificationHandler<DomainEventNotification<ContactItemDeletedEvent>>
     {
         private readonly ILogger<ContactItemCompletedEventHandler> _logger;
 
@@ -16,7 +16,7 @@ namespace jCoreDemoApp.Application.ContactItems.EventHandlers
             _logger = logger;
         }
 
-        public Task Handle(DomainEventNotification<ContactItemCompletedEvent> notification, CancellationToken cancellationToken)
+        public Task Handle(DomainEventNotification<ContactItemDeletedEvent> notification, CancellationToken cancellationToken)
         {
             var domainEvent = notification.DomainEvent;
 

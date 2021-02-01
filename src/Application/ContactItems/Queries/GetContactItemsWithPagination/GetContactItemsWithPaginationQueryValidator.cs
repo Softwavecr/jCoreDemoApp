@@ -6,9 +6,9 @@ namespace jCoreDemoApp.Application.ContactItems.Queries.GetContactItemsWithPagin
     {
         public GetContactItemsWithPaginationQueryValidator()
         {
-            RuleFor(x => x.ListId)
-                .NotNull()
-                .NotEmpty().WithMessage("ListId is required.");
+            // RuleFor(x => x.Id)
+            //     .NotNull()
+            //     .NotEmpty().WithMessage("Id is required.");
 
             RuleFor(x => x.PageNumber)
                 .GreaterThanOrEqualTo(1).WithMessage("PageNumber at least greater than or equal to 1.");

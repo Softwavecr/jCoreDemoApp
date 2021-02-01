@@ -3,9 +3,9 @@ using jCoreDemoApp.Domain.Entities;
 
 namespace jCoreDemoApp.Domain.Events
 {
-    public class ContactItemCompletedEvent : DomainEvent
+    public class ContactItemDeletedEvent : DomainEvent
     {
-        public ContactItemCompletedEvent(ContactItem item)
+        public ContactItemDeletedEvent(ContactItem item)
         {
             Item = item;
         }
