@@ -1,35 +1,37 @@
 ﻿using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net.Http;
+using System.Text.Json;
 
 namespace jCoreDemoApp.Application.WeatherForecasts.Queries.GetWeatherForecasts
 {
-    public class GetWeatherForecastsQuery : IRequest<IEnumerable<WeatherForecast>>
+    public class GetWeatherForecastsQuery : IRequest<RootObject>{}   
+    public class GetWeatherForecastsQueryHandler : IRequestHandler<GetWeatherForecastsQuery, RootObject>
     {
-    }
-
-    public class GetWeatherForecastsQueryHandler : IRequestHandler<GetWeatherForecastsQuery, IEnumerable<WeatherForecast>>
-    {
-        private static readonly string[] Summaries = new[]
+        public Task<RootObject> Handle(GetWeatherForecastsQuery request, CancellationToken cancellationToken)
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+            //TODO, StringBuilder, and use parameters
+            var uri = "https://api.openweathermap.org/data/2.5/weather?q=New%20York,us&units=metric&APPID=a382ba56864d4c04ef13a65d92261590";            
+            Console.WriteLine(uri);
+            var vm = GetData<RootObject>(uri);
+            return vm;
+        }
 
-        public Task<IEnumerable<WeatherForecast>> Handle(GetWeatherForecastsQuery request, CancellationToken cancellationToken)
+        private async Task<T> GetData<T>(string uri)
         {
-            var rng = new Random();
-
-            var vm = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            });
-
-            return Task.FromResult(vm);
+            Console.WriteLine(uri);
+            T dataSet =  default(T);
+                using (var httpClient = new HttpClient())
+                {
+                    using (var response = await httpClient.GetAsync(uri))
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        dataSet = JsonSerializer.Deserialize<T>(apiResponse);              
+                    }
+                }
+                return dataSet;
         }
     }
 }

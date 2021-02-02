@@ -1,24 +1,25 @@
-<h1 id="tableLabel">Weather forecast</h1>
+<h1 id="tableLabel">Weather</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
+<p>Current conditions in New York, retrieved from openweathermap.org free API.</p>
 
-<p *ngIf="!forecasts"><em>Loading...</em></p>
+<p *ngIf="!forecast"><em>Loading...</em></p>
 
-<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="forecasts">
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="forecast">
   <thead>
     <tr>
-      <th>Date</th>
-      <th>Temp. (C)</th>
-      <th>Temp. (F)</th>
-      <th>Summary</th>
+      <th>City</th>
+      <th>Temp (C)</th>
+      <th>Feeling (C)</th>
+      <th>Pressure</th>
+      <th>Humidity</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let forecast of forecasts">
-      <td>{{ forecast.date }}</td>
-      <td>{{ forecast.temperatureC }}</td>
-      <td>{{ forecast.temperatureF }}</td>
-      <td>{{ forecast.summary }}</td>
-    </tr>
+      <td>{{ city }}</td>
+      <td>{{ temp }}</td>
+      <td>{{ feels_like }}</td>
+      <td>{{ pressure }}</td>
+      <td>{{ humidity }}</td>
+    
   </tbody>
 </table>
