@@ -1,4 +1,4 @@
-# jCoreDemoApp
+# jCoreDemoApp by Jairo Guerrero 2021
 
 **Sample WebApi/Angular application demonstrating ASP.NET Core API features**
 
@@ -18,8 +18,6 @@ The **ASP.NET Core** Backend demonstrates:
 * Separating code into separate projects
 * Custom User Authentication
 * Using ASP.NET Core as a backend to an Angular 10 front end
-
-The sample also includes a few Server Side Rendered MVC pages for browsing and viewing of albums and artists. I'll be adding the edit pages at a later point.
 
 Version supported:  
 * **.NET 5 SDK or later**
