@@ -928,7 +928,7 @@ export class TodoListsClient implements ITodoListsClient {
 }
 
 export interface IWeatherForecastClient {
-    get(): Observable<WeatherForecast[]>;
+    get(): Observable<RootObject>;
 }
 
 @Injectable({
@@ -944,7 +944,7 @@ export class WeatherForecastClient implements IWeatherForecastClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    get(): Observable<WeatherForecast[]> {
+    get(): Observable<RootObject> {
         let url_ = this.baseUrl + "/api/WeatherForecast";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -963,14 +963,14 @@ export class WeatherForecastClient implements IWeatherForecastClient {
                 try {
                     return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<WeatherForecast[]>><any>_observableThrow(e);
+                    return <Observable<RootObject>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<WeatherForecast[]>><any>_observableThrow(response_);
+                return <Observable<RootObject>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<WeatherForecast[]> {
+    protected processGet(response: HttpResponseBase): Observable<RootObject> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -981,11 +981,7 @@ export class WeatherForecastClient implements IWeatherForecastClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(WeatherForecast.fromJS(item));
-            }
+            result200 = RootObject.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -993,7 +989,7 @@ export class WeatherForecastClient implements IWeatherForecastClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<WeatherForecast[]>(<any>null);
+        return _observableOf<RootObject>(<any>null);
     }
 }
 
@@ -1852,13 +1848,22 @@ export interface IUpdateTodoListCommand {
     title?: string | undefined;
 }
 
-export class WeatherForecast implements IWeatherForecast {
-    date?: Date;
-    temperatureC?: number;
-    temperatureF?: number;
-    summary?: string | undefined;
+export class RootObject implements IRootObject {
+    coord?: Coord | undefined;
+    weather?: Weather[] | undefined;
+    base?: string | undefined;
+    main?: Main | undefined;
+    visibility?: number;
+    wind?: Wind | undefined;
+    clouds?: Clouds | undefined;
+    dt?: number;
+    sys?: Sys | undefined;
+    timezone?: number;
+    id?: number;
+    name?: string | undefined;
+    cod?: number;
 
-    constructor(data?: IWeatherForecast) {
+    constructor(data?: IRootObject) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1869,35 +1874,342 @@ export class WeatherForecast implements IWeatherForecast {
 
     init(_data?: any) {
         if (_data) {
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
-            this.temperatureC = _data["temperatureC"];
-            this.temperatureF = _data["temperatureF"];
-            this.summary = _data["summary"];
+            this.coord = _data["coord"] ? Coord.fromJS(_data["coord"]) : <any>undefined;
+            if (Array.isArray(_data["weather"])) {
+                this.weather = [] as any;
+                for (let item of _data["weather"])
+                    this.weather!.push(Weather.fromJS(item));
+            }
+            this.base = _data["base"];
+            this.main = _data["main"] ? Main.fromJS(_data["main"]) : <any>undefined;
+            this.visibility = _data["visibility"];
+            this.wind = _data["wind"] ? Wind.fromJS(_data["wind"]) : <any>undefined;
+            this.clouds = _data["clouds"] ? Clouds.fromJS(_data["clouds"]) : <any>undefined;
+            this.dt = _data["dt"];
+            this.sys = _data["sys"] ? Sys.fromJS(_data["sys"]) : <any>undefined;
+            this.timezone = _data["timezone"];
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.cod = _data["cod"];
         }
     }
 
-    static fromJS(data: any): WeatherForecast {
+    static fromJS(data: any): RootObject {
         data = typeof data === 'object' ? data : {};
-        let result = new WeatherForecast();
+        let result = new RootObject();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        data["temperatureC"] = this.temperatureC;
-        data["temperatureF"] = this.temperatureF;
-        data["summary"] = this.summary;
+        data["coord"] = this.coord ? this.coord.toJSON() : <any>undefined;
+        if (Array.isArray(this.weather)) {
+            data["weather"] = [];
+            for (let item of this.weather)
+                data["weather"].push(item.toJSON());
+        }
+        data["base"] = this.base;
+        data["main"] = this.main ? this.main.toJSON() : <any>undefined;
+        data["visibility"] = this.visibility;
+        data["wind"] = this.wind ? this.wind.toJSON() : <any>undefined;
+        data["clouds"] = this.clouds ? this.clouds.toJSON() : <any>undefined;
+        data["dt"] = this.dt;
+        data["sys"] = this.sys ? this.sys.toJSON() : <any>undefined;
+        data["timezone"] = this.timezone;
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["cod"] = this.cod;
         return data; 
     }
 }
 
-export interface IWeatherForecast {
-    date?: Date;
-    temperatureC?: number;
-    temperatureF?: number;
-    summary?: string | undefined;
+export interface IRootObject {
+    coord?: Coord | undefined;
+    weather?: Weather[] | undefined;
+    base?: string | undefined;
+    main?: Main | undefined;
+    visibility?: number;
+    wind?: Wind | undefined;
+    clouds?: Clouds | undefined;
+    dt?: number;
+    sys?: Sys | undefined;
+    timezone?: number;
+    id?: number;
+    name?: string | undefined;
+    cod?: number;
+}
+
+export class Coord implements ICoord {
+    lon?: number;
+    lat?: number;
+
+    constructor(data?: ICoord) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.lon = _data["lon"];
+            this.lat = _data["lat"];
+        }
+    }
+
+    static fromJS(data: any): Coord {
+        data = typeof data === 'object' ? data : {};
+        let result = new Coord();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["lon"] = this.lon;
+        data["lat"] = this.lat;
+        return data; 
+    }
+}
+
+export interface ICoord {
+    lon?: number;
+    lat?: number;
+}
+
+export class Weather implements IWeather {
+    id?: number;
+    main?: string | undefined;
+    description?: string | undefined;
+    icon?: string | undefined;
+
+    constructor(data?: IWeather) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.main = _data["main"];
+            this.description = _data["description"];
+            this.icon = _data["icon"];
+        }
+    }
+
+    static fromJS(data: any): Weather {
+        data = typeof data === 'object' ? data : {};
+        let result = new Weather();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["main"] = this.main;
+        data["description"] = this.description;
+        data["icon"] = this.icon;
+        return data; 
+    }
+}
+
+export interface IWeather {
+    id?: number;
+    main?: string | undefined;
+    description?: string | undefined;
+    icon?: string | undefined;
+}
+
+export class Main implements IMain {
+    temp?: number;
+    feels_like?: number;
+    temp_min?: number;
+    temp_max?: number;
+    pressure?: number;
+    humidity?: number;
+
+    constructor(data?: IMain) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.temp = _data["temp"];
+            this.feels_like = _data["feels_like"];
+            this.temp_min = _data["temp_min"];
+            this.temp_max = _data["temp_max"];
+            this.pressure = _data["pressure"];
+            this.humidity = _data["humidity"];
+        }
+    }
+
+    static fromJS(data: any): Main {
+        data = typeof data === 'object' ? data : {};
+        let result = new Main();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["temp"] = this.temp;
+        data["feels_like"] = this.feels_like;
+        data["temp_min"] = this.temp_min;
+        data["temp_max"] = this.temp_max;
+        data["pressure"] = this.pressure;
+        data["humidity"] = this.humidity;
+        return data; 
+    }
+}
+
+export interface IMain {
+    temp?: number;
+    feels_like?: number;
+    temp_min?: number;
+    temp_max?: number;
+    pressure?: number;
+    humidity?: number;
+}
+
+export class Wind implements IWind {
+    speed?: number;
+    deg?: number;
+
+    constructor(data?: IWind) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.speed = _data["speed"];
+            this.deg = _data["deg"];
+        }
+    }
+
+    static fromJS(data: any): Wind {
+        data = typeof data === 'object' ? data : {};
+        let result = new Wind();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["speed"] = this.speed;
+        data["deg"] = this.deg;
+        return data; 
+    }
+}
+
+export interface IWind {
+    speed?: number;
+    deg?: number;
+}
+
+export class Clouds implements IClouds {
+    all?: number;
+
+    constructor(data?: IClouds) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.all = _data["all"];
+        }
+    }
+
+    static fromJS(data: any): Clouds {
+        data = typeof data === 'object' ? data : {};
+        let result = new Clouds();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["all"] = this.all;
+        return data; 
+    }
+}
+
+export interface IClouds {
+    all?: number;
+}
+
+export class Sys implements ISys {
+    type?: number;
+    id?: number;
+    country?: string | undefined;
+    sunrise?: number;
+    sunset?: number;
+
+    constructor(data?: ISys) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.type = _data["type"];
+            this.id = _data["id"];
+            this.country = _data["country"];
+            this.sunrise = _data["sunrise"];
+            this.sunset = _data["sunset"];
+        }
+    }
+
+    static fromJS(data: any): Sys {
+        data = typeof data === 'object' ? data : {};
+        let result = new Sys();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["type"] = this.type;
+        data["id"] = this.id;
+        data["country"] = this.country;
+        data["sunrise"] = this.sunrise;
+        data["sunset"] = this.sunset;
+        return data; 
+    }
+}
+
+export interface ISys {
+    type?: number;
+    id?: number;
+    country?: string | undefined;
+    sunrise?: number;
+    sunset?: number;
 }
 
 export interface FileResponse {

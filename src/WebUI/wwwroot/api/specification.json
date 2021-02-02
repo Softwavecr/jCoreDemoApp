@@ -264,12 +264,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -300,12 +295,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
     "/api/TodoItems/{id}": {
@@ -350,12 +340,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -386,12 +371,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
     "/api/TodoItems/UpdateItemDetails": {
@@ -435,12 +415,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
     "/api/TodoLists": {
@@ -460,12 +435,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -496,12 +466,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
     "/api/TodoLists/{id}": {
@@ -534,12 +499,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -582,12 +542,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -618,12 +573,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
+        }
       }
     },
     "/api/WeatherForecast": {
@@ -638,10 +588,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
+                  "$ref": "#/components/schemas/RootObject"
                 }
               }
             }
@@ -1095,25 +1042,200 @@
           }
         }
       },
-      "WeatherForecast": {
+      "RootObject": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "date": {
-            "type": "string",
-            "format": "date-time"
+          "coord": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Coord"
+              }
+            ]
           },
-          "temperatureC": {
-            "type": "integer",
-            "format": "int32"
+          "weather": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/Weather"
+            }
           },
-          "temperatureF": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "summary": {
+          "base": {
             "type": "string",
             "nullable": true
+          },
+          "main": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Main"
+              }
+            ]
+          },
+          "visibility": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "wind": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Wind"
+              }
+            ]
+          },
+          "clouds": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Clouds"
+              }
+            ]
+          },
+          "dt": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sys": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Sys"
+              }
+            ]
+          },
+          "timezone": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "cod": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Coord": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "lon": {
+            "type": "number",
+            "format": "double"
+          },
+          "lat": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "Weather": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "main": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "icon": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Main": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "temp": {
+            "type": "number",
+            "format": "double"
+          },
+          "feels_like": {
+            "type": "number",
+            "format": "double"
+          },
+          "temp_min": {
+            "type": "number",
+            "format": "double"
+          },
+          "temp_max": {
+            "type": "number",
+            "format": "double"
+          },
+          "pressure": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "humidity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Wind": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "speed": {
+            "type": "number",
+            "format": "double"
+          },
+          "deg": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Clouds": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "all": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Sys": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "sunrise": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sunset": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       }
