@@ -5,13 +5,13 @@ using jCoreDemoApp.Application.TodoItems.Commands.UpdateTodoItem;
 using jCoreDemoApp.Application.TodoItems.Commands.UpdateTodoItemDetail;
 using jCoreDemoApp.Application.TodoItems.Queries.GetTodoItemsWithPagination;
 using jCoreDemoApp.Application.TodoLists.Queries.GetTodos;
-using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace jCoreDemoApp.WebUI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class TodoItemsController : ApiControllerBase
     {
         [HttpGet]

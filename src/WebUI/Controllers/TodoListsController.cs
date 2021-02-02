@@ -3,13 +3,13 @@ using jCoreDemoApp.Application.TodoLists.Commands.DeleteTodoList;
 using jCoreDemoApp.Application.TodoLists.Commands.UpdateTodoList;
 using jCoreDemoApp.Application.TodoLists.Queries.ExportTodos;
 using jCoreDemoApp.Application.TodoLists.Queries.GetTodos;
-using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace jCoreDemoApp.WebUI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class TodoListsController : ApiControllerBase
     {
         [HttpGet]
