@@ -6,7 +6,7 @@ This is a sample **ASP.NET Core application** that *demonstrates* basic features
 
 This Solution follows the Clean Architecture.
 
-More instructions at https://www.softwave.cr/posts/creating-web-application-on-net-core-webapi/
+More instructions at https://www.softwavecr.com/posts/creating-web-application-on-net-core-webapi/
 
 
 ### ASP.NET Core Features
